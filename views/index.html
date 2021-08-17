@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body style="overflow: hidden;">
+        <div id="btn" ><h1>metaverse + chating PoC  >> CHANGE VIEW</h1></div>
+        <div id="msg" style="display: block; background-color: skyblue; overflow: hidden;">
+            
+            <div style="position:fixed; bottom:100px; left:0px;font-size:35px;" id=chat-list> 
+            </div>
+            <input id="input-text" type=text style="background-color: white; position: fixed; bottom: 0px; left: 0px; right: 0px;
+            height: 100px;font-size: 60px;width: 100%;"></input>
+            <div id="send-btn" style="background-color:slategrey; position: fixed; bottom: 0px; right: 0px; height: 100px; width: 100px;
+            font-size: 40px; color:white; text-align: center; line-height: 100px;" >전송</div>
+        </div>
+        <div id="mv" style="display:none;"></div>
+        <script src="assets/js/jquery.js"></script>
+		<script src="assets/js/three.js"></script>
+        <script src="assets/examples/js/controls/OrbitControls.js"></script>
+		<script>
+			const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x212121);
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.3, 1000 );
+
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+            $('#mv').append(renderer.domElement);
+			//document.body.appendChild( renderer.domElement );
+
+			const geometry = new THREE.BoxGeometry(1,1,1);
+			const material = new THREE.MeshNormalMaterial( { color: 0xababab } );
+			const cube = new THREE.Mesh( geometry, material );
+			scene.add( cube );
+
+			camera.position.z = 5;
+
+            let controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.update();
+
+            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+            scene.add( directionalLight );            
+
+			const animate = function () {
+				requestAnimationFrame( animate );
+
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+                controls.update();
+				renderer.render( scene, camera );
+			};
+
+			animate();
+		</script>
+        <script>
+            let h = window.innerHeight;
+            $("#msg").css("height",h + "px");
+            $('#btn').click(()=>{
+                let h = window.innerHeight;
+                let mvDisplay=$('#mv').css("display");
+                if(mvDisplay === "block") {
+                    $("#mv").css("display","none");
+                    $("#msg").css("display","block");
+                    $("#msg").css("height",h + "px");
+                } else {
+                    $("#mv").css("display","block");
+                    $("#msg").css("display","none");
+                }
+            });
+
+            $('#send-btn').click(()=>{
+
+                let text = $('#input-text').val();
+                text = "<h2> Me : " + text + "</h2>";
+                $('#chat-list').append(text);
+                $('#input-text').val("");
+                
+
+            });
+
+        </script>
+	</body>
+</html>
